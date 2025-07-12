@@ -1,0 +1,42 @@
+# ملفات البيئة
+.env
+.env/
+*.env
+.env.local
+.env.*.local
+
+# قاعدة بيانات SQLite (إذا كنت تستخدمها للتطوير)
+*.sqlite3
+*.db
+
+# ملفات بايثون المترجمة
+__pycache__/
+*.py[cod]
+*$py.class
+
+# بيئات بايثون الافتراضية
+venv/
+ENV/
+env/
+.venv/
+
+# باكيجات التبعيات
+node_modules/
+
+# ملفات الإعدادات
+/settings.py
+
+# ملفات IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ملفات النظام
+.DS_Store
+Thumbs.db
+
+# ملفات البناء والإنتاج
+/build/
+/dist/
+*.egg-info/
