@@ -140,7 +140,7 @@ DATABASES = {
         'PORT': config('DB_PORT'),
     }
 }
-DATABASES['default'] = dj_database_url.parse("postgresql://solar_db_yo3s_user:jpdITjjSXluhVujyu09QlBbAnHddFeJj@dpg-d1rt553ipnbc73csoep0-a.oregon-postgres.render.com/solar_db_yo3s")
+DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
