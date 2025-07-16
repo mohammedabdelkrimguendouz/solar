@@ -31,10 +31,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
                         'user_id': leader.id,
                         'message': message
                     },
-                    content_type='application/json'
+                    format='json'
                 )
             force_authenticate(request, user=leader)
-            response = SendNotificationAPIView.as_view()(request)
+            notification_response = SendNotificationAPIView.as_view()(request)
+            print(notification_response.data)
 
         return response
 
