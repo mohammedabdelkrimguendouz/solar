@@ -1,1 +1,1 @@
-# solar-track
+# solar
