@@ -15,6 +15,7 @@ from pathlib import Path
 from datetime import timedelta
 import cloudinary
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,8 +38,8 @@ CHANNELS_WS_PROTOCOLS = ["websocket"]
 
 
 # CORS Settings
-CORS_ALLOW_ALL_ORIGINS = True 
-CORS_ALLOW_HEADERS = ['*']  
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = ['*']
 CORS_ALLOW_CREDENTIALS = True
 
 # Security Settings
@@ -46,22 +47,22 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 ALLOWED_HOSTS = ['*']
 
-# JWT Settings 
+# JWT Settings
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
-SESSION_COOKIE_SECURE = False  
-CSRF_COOKIE_SECURE = False  
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 # Application definition
 
 INSTALLED_APPS = [
     'daphne',
     'channels',
     'notifications',
-    
+
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,15 +76,15 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
     'cloudinary',
     'cloudinary_storage',
-    
-   
+
+
 
     #my apps
     'users',
     'projects',
     'progress',
-    
-    
+
+
 ]
 
 ASGI_APPLICATION = 'project.asgi.application'
@@ -139,7 +140,7 @@ DATABASES = {
         'PORT': config('DB_PORT'),
     }
 }
-
+DATABASES['default'] = dj_database_url.parse("postgresql://solar_db_yo3s_user:jpdITjjSXluhVujyu09QlBbAnHddFeJj@dpg-d1rt553ipnbc73csoep0-a.oregon-postgres.render.com/solar_db_yo3s")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
