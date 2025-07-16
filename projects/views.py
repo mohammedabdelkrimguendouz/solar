@@ -11,15 +11,32 @@ from users.models import User
 from projects.models import Project
 from progress.models import Progress
 from rest_framework.generics import ListAPIView
+from django.test import RequestFactory
+from notifications.views import SendNotificationAPIView
+from rest_framework.test import force_authenticate
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
-    
+
     def create(self, request, *args, **kwargs):
-        print("Incoming data:", request.data) 
-        return super().create(request, *args, **kwargs)
+        response=super().create(request, *args, **kwargs)
+        leader = User.objects.get(id=request.data['leader_id'])
+        if leader:
+            message = f" you have a new project : {response.data['name']} assigned to you"
+            request = RequestFactory().post(
+                    '/',
+                    data={
+                        'user_id': leader.id,
+                        'message': message
+                    },
+                    content_type='application/json'
+                )
+            force_authenticate(request, user=leader)
+            response = SendNotificationAPIView.as_view()(request)
+
+        return response
 
 
 
@@ -28,9 +45,9 @@ class GetProjectsByUserView(ListAPIView):
     permission_classes = [IsAuthenticated, IsLeader]
     def get_queryset(self):
         return Project.objects.filter(leader=self.request.user).order_by('-created_at')
-        
+
 class DashboardStatsView(APIView):
-    permission_classes = [IsAdmin]
+    #permission_classes = [IsAdmin]
 
     def get(self, request):
         total_projects = Project.objects.count()

@@ -29,18 +29,39 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# WSGI_APPLICATION = 'project.wsgi.application'
 
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
-CORS_ALLOWED_ORIGINS = [
-    "https://solar-track.netlify.app"
-]
+CHANNELS_WS_PROTOCOLS = ["websocket"]
 
 
 
+# CORS Settings
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOW_HEADERS = ['*']  
+CORS_ALLOW_CREDENTIALS = True
+
+# Security Settings
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+ALLOWED_HOSTS = ['*']
+
+# JWT Settings 
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+}
+SESSION_COOKIE_SECURE = False  
+CSRF_COOKIE_SECURE = False  
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
+    'notifications',
+    
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,18 +70,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-
     'rest_framework',
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'cloudinary',
     'cloudinary_storage',
+    
+   
 
     #my apps
     'users',
     'projects',
     'progress',
+    
+    
 ]
+
+ASGI_APPLICATION = 'project.asgi.application'
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -92,8 +118,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'project.wsgi.application'
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -158,11 +189,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "AUTH_HEADER_TYPES": ("Bearer",),
-}
+
 
 
 
@@ -182,7 +209,6 @@ cloudinary.config(
 )
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-CORS_ALLOW_ALL_ORIGINS = True
 
 
 MEDIA_URL = '/media/'
