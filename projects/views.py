@@ -47,7 +47,7 @@ class GetProjectsByUserView(ListAPIView):
         return Project.objects.filter(leader=self.request.user).order_by('-created_at')
 
 class DashboardStatsView(APIView):
-    #permission_classes = [IsAdmin]
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         total_projects = Project.objects.count()
