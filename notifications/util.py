@@ -7,19 +7,20 @@ from .serializers import NotificationSerializer
 from users.models import User
 
 
+
 def send_notification_to_user(user_id, message):
     try:
         user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        raise NotFound("User not found")
+    except Exception as e:
+        raise NotFound(f"User not found: {e}")
 
-    
+
     notification = Notification.objects.create(
         recipient=user,
         message=message
     )
 
-    
+
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"notifications_{user.id}",
