@@ -127,6 +127,17 @@ TEMPLATES = [
 #    },
 #}
 
+# تأكد من أن إعدادات REDIS_URL صحيحة
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(config("REDIS_URL"))],  # تأكد من أن هذا هو العنوان الصحيح
+            "symmetric_encryption_keys": [SECRET_KEY],
+        },
+    },
+}
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

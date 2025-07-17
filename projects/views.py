@@ -15,29 +15,20 @@ from django.test import RequestFactory
 from notifications.views import SendNotificationAPIView
 from rest_framework.test import force_authenticate
 
+from .util import send_notification_to_user
+
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def create(self, request, *args, **kwargs):
-        response=super().create(request, *args, **kwargs)
-        leader = User.objects.get(id=request.data['leader_id'])
-        if leader:
-            message = f" you have a new project : {response.data['name']} assigned to you"
-            request = RequestFactory().post(
-                    '/',
-                    data={
-                        'user_id': leader.id,
-                        'message': message
-                    },
-                    format='json'
-                )
-            force_authenticate(request, user=leader)
-            notification_response = SendNotificationAPIView.as_view()(request)
-            print(notification_response.data)
-
-        return response
+       response = super().create(request, *args, **kwargs)
+       leader_id = request.data.get('leader_id')
+       if leader_id:
+           message = f"You have a new project: {response.data['name']} assigned to you"
+           send_notification_to_user(leader_id, message)
+       return response
 
 
 
