@@ -23,7 +23,7 @@ def send_notification_to_user(user_id, message):
 
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        f"notifications_{user.id}",
+        f"notifications_{user_id}",
         {
             "type": "send.notification",
             "notification": NotificationSerializer(notification).data
